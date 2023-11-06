@@ -1,0 +1,19 @@
+polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+polyCone -r 1 -h 2 -sx 20 -sy 1 -sz 0 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+
+select -r pSphere2;
+scale -x 0.2 -y 0.2 -z 0.2;
+move -x 0.5 -y 0.5 -z 0.8;
+
+select -r pSphere3;
+scale -x 0.2 -y 0.2 -z 0.2;
+move -x -0.5 -y 0.5 -z 0.8;
+
+select pCone1;
+rotate -x 90;
+move -y 0.2 -z 1.2;
+scale -x 0.35 -y 0.5 -z 0.35;
+
+
