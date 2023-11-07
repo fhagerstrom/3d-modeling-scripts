@@ -1,19 +1,20 @@
-polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
-polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
-polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
-polyCone -r 1 -h 2 -sx 20 -sy 1 -sz 0 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+polySphere -radius 2 -name "head";
+polyCone -radius 1 -name "nose";
 
-select -r pSphere2;
-scale -x 0.2 -y 0.2 -z 0.2;
-move -x 0.5 -y 0.5 -z 0.8;
+move 2.5 0 0;
+rotate 0 0 -90;
 
-select -r pSphere3;
-scale -x 0.2 -y 0.2 -z 0.2;
-move -x -0.5 -y 0.5 -z 0.8;
-
-select pCone1;
-rotate -x 90;
-move -y 0.2 -z 1.2;
-scale -x 0.35 -y 0.5 -z 0.35;
+polySphere -radius 0.3 -name "rEye";
+move 1.5 1 0.7;
+polySphere -radius 0.3 -name "lEye";
+move 1.5 1 -0.7;
+polyCube -d 0.6 -h 0.2 -w 0.2 -name "lEyebrow";
+move 1.2 1.5 -0.8;
+rotate -30 0 0;
+polyCube -d 0.6 -h 0.2 -w 0.2 -name "rEyebrow";
+move 1.2 1.5 0.8;
+rotate 30 0 0;
+select -all; //Markerar allt
+group - name "HeadGRP";
 
 
