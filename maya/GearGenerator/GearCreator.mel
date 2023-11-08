@@ -11,8 +11,9 @@ global proc createGearGenWindow()
     columnLayout -adjustableColumn true;
     
     // Set contents of window
-    intSliderGrp -label "Number of Teeth" -minValue 1 -maxValue 50 -field true -value 10 gearTeeth;
-    floatSliderGrp -label "Thickness" -minValue 0.5 -maxValue 5 -field true -value 1 gearThickness;
+    floatSliderGrp -label "Radius:" -minValue 1 -maxValue 5 -field true -value 1 gearRadius;
+    intSliderGrp -label "Number of Teeth:" -minValue 1 -maxValue 50 -field true -value 10 gearTeeth;
+    floatSliderGrp -label "Thickness:" -minValue 0.5 -maxValue 2 -field true -value 1 gearThickness;
     button -label "Generate Gear" -command "generateGear()";
     
     showWindow gearCreatorWin;
@@ -26,12 +27,13 @@ global proc generateGear()
         delete gearCylinder;
     }
     
+    float $radius = `floatSliderGrp -q -value gearRadius`;
     int $teeth = `intSliderGrp -q -value gearTeeth`;
     float $thickness = `floatSliderGrp -q -value gearThickness`;
     int $subDivs = $teeth * 2;
     
     // Create the gear base
-    string $gearBase[] = `polyCylinder -name "gearCylinder" -r 2 -h $thickness -sx $subDivs -sy 1 -sz 1 -ax 0 0 0`;
+    string $gearBase[] = `polyCylinder -name "gearCylinder" -r $radius -h $thickness -sx $subDivs -sy 1 -sz 1 -ax 0 0 0`;
     
     // Convert the base cylinder to a string
     // Extract the name of the cylinder from the array
@@ -44,8 +46,9 @@ global proc generateGear()
         $selectedFaces[size($selectedFaces)] = ($gearBaseString + ".f[" + $i + "]");
     }
     
+    float $extrusionValue = $thickness * 0.75;
     select $selectedFaces;
-    polyExtrudeFacet -ltz $thickness -ls 1 1 1; 
+    polyExtrudeFacet -ltz $extrusionValue -ls 0.5 1 1; 
 }
 
 // Call GUI function
