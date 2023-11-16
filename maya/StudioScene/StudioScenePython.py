@@ -17,12 +17,25 @@ def CreateStudioScene():
     # Create a cube
     cube = pm.polyCube()[0]
 
-    left_light = CreateAreaLight('leftLight', 2.0, (1, 1, 1), (-5, 5, 0))
-    right_light = CreateAreaLight('rightLight', 2.0, (1, 1, 1), (5, 5, 0))
-    roof_lamp = CreateAreaLight('roofLamp', 2.0, (1, 1, 1), (0, 10, 0))
+    leftLight = CreateAreaLight('leftLight', 2.0, (1, 1, 1), (-5, 5, 0))
+    rightLight = CreateAreaLight('rightLight', 2.0, (1, 1, 1), (5, 5, 0))
+    roofLamp = CreateAreaLight('roofLamp', 2.0, (1, 1, 1), (0, 10, 0))
 
     # Create a plane
-    plane = pm.polyPlane(width=20, height=10, subdivisionsX=1, subdivisionsY=1)[0]
+    backdropPlane = pm.polyPlane(name='backdrop', width=20, height=15, subdivisionsX=1, subdivisionsY=1)[0]
+    pm.rotate(backdropPlane, 90, 0, 0)
+    pm.move(backdropPlane, 0, 7, -9)
+    
+    backdropPlane = pm.ls(selection=True)[0]
+    pm.select(backdropPlane.e[0])
+    pm.polyExtrudeEdge(ltz = 15.0)
+    pm.select(backdropPlane.e[0])
+    pm.polyBevel(sg = 6, o = 1.4)
+    
+    pm.select(backdropPlane.f[-1])
+    pm.delete()
+    pm.select(backdropPlane.f[-1])
+    pm.delete()
 
     # Create an Arnold skydome light for environment lighting
     environmentLight = pm.createNode('aiSkyDomeLight', name='environmentLight')
