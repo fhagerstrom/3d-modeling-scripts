@@ -2,7 +2,7 @@ import pymel.core as pm
 import maya.cmds as cmds
 import mtoa.utils as mutils
 
-def CreateAreaLight(name, intensity, color, scale, position, rotation):
+def CreateAreaLight(name, scale, position, rotation):
     
     # Create aiAreaLight as a locator (transform node)
     areaLight = mutils.createLocator("aiAreaLight", asLight=True)
@@ -11,8 +11,8 @@ def CreateAreaLight(name, intensity, color, scale, position, rotation):
     areaLight = cmds.rename(name)
 
     # Set attributes for the light
-    cmds.setAttr(areaLight + '.intensity', intensity)
-    cmds.setAttr(areaLight + '.color', color[0], color[1], color[2])
+    cmds.setAttr(areaLight + '.intensity', 2.0)
+    cmds.setAttr(areaLight + '.color', 1, 1, 1)
     cmds.setAttr(areaLight + '.normalize', False)
 
     # Set transform attributes
@@ -22,39 +22,51 @@ def CreateAreaLight(name, intensity, color, scale, position, rotation):
 
 
 def CreateStudioScene():
-    # Create a cube as a model placeholder. Replace cube with own model(s) for rendering showcase
-    cube = pm.polyCube(name="modelPlaceholder", width=5, height=5, depth=5)[0]
-
-    leftLight = CreateAreaLight('leftLight', 2.0, (1, 1, 1), (5, 5, 5), (-9, 6, 0), (0, -90, 0))
-    rightLight = CreateAreaLight('rightLight', 2.0, (1, 1, 1), (5, 5, 5), (9, 6, 0), (0, 90, 0))
-    roofLamp = CreateAreaLight('roofLamp', 2.0, (1, 1, 1), (5, 5, 5), (0, 10, 0), (-90, 0, 0))
-
-    # Create a plane as a backdrop
-    backdropPlane = pm.polyPlane(name='backdrop', width=30, height=15, subdivisionsX=1, subdivisionsY=1)[0]
-    pm.rotate(backdropPlane, 90, 0, 0)
-    pm.move(backdropPlane, 0, 7, -9)
-
-    # Select the plane, store it in the backdropPlane variable
-    # Extrude the bottom edge, then bevel it in 6 segments and put an offset of 1.4
+    # Create area lights
+    leftLight = CreateAreaLight('leftLight', (5, 5, 5), (-10, 7, 0), (0, -90, 0))
+    rightLight = CreateAreaLight('rightLight', (5, 5, 5), (10, 7, 0), (0, 90, 0))
+    topLight = CreateAreaLight('topLight', (5, 5, 5), (0, 12, 0), (-90, 0, 0))
+    
+    # Create a floor plane
+    floorPlane = pm.polyPlane(name='floor', width=50, height=25, subdivisionsX=1, subdivisionsY=1)[0]
+    
+    # Create a backdrop plane
+    backdropPlane = pm.polyPlane(name='backdrop', width=20, height=20, subdivisionsX=1, subdivisionsY=1)[0]
+    pm.move(backdropPlane, 0, 0.25, 0)
+    
+    # Extrude and bevel the plane to create the backdrop
     backdropPlane = pm.ls(selection=True)[0]
-    pm.select(backdropPlane.e[0])
-    pm.polyExtrudeEdge(ltz=30.0)
-    pm.select(backdropPlane.e[0])
-    pm.polyBevel(sg = 6, o = 1.4)
-
-    # Select and delete two corner faces that is created after beveling the plane edge
+    pm.select(backdropPlane.e[3])
+    pm.polyExtrudeEdge(ltz = 15.0)
+    pm.select(backdropPlane.e[3])
+    pm.polyBevel(oaf=0.4, sg=12) # fractions, segments
+    
+    # Delete faces on the sides.
     pm.select(backdropPlane.f[-1])
     pm.delete()
     pm.select(backdropPlane.f[-1])
     pm.delete()
     
-    # Create SkyDome light
-    mutils.createLocator("aiSkyDomeLight", asLight=True)
+    # Put some thickness on it
+    pm.select(backdropPlane)
+    pm.polyExtrudeFacet(thickness=0.2)
+    
+    # Create left wall
+    leftWallPlane = pm.polyPlane(name='leftWall', width=15, height=15, subdivisionsX=1, subdivisionsY=1)[0]
+    pm.rotate(leftWallPlane, 0, 0, 90)
+    pm.move(leftWallPlane, -10.5, 7.5, 0)
+    
+    # Create right wall
+    rightWallPlane = pm.polyPlane(name='rightWall', width=15, height=15, subdivisionsX=1, subdivisionsY=1)[0]
+    pm.rotate(rightWallPlane, 0, 0, -90)
+    pm.move(rightWallPlane, 10.5, 7.5, 0)
 
-    # Rename the light and set attributes
+    # Create SkyDome light
+    skyLight = mutils.createLocator("aiSkyDomeLight", asLight=True)
+    
     skyLight = cmds.rename('skyLight')
-    pm.setAttr(skyLight + '.intensity', 0.25)
-    pm.setAttr(skyLight + ".aiNormalize", False)
+    cmds.setAttr(skyLight + '.intensity', 0.25)
+    cmds.setAttr(skyLight + ".aiNormalize", False)
 
     print("Studio scene created successfully!")
 
