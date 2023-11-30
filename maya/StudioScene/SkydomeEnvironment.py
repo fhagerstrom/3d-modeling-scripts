@@ -2,7 +2,7 @@ import pymel.core as pm
 import maya.cmds as cmds
 import mtoa.utils as mutils
 
-def CreateAreaLight(name, intensity, color, scale, position, rotation):
+def CreateAreaLight(name, scale, position, rotation):
     
     # Create aiAreaLight as a locator (transform node)
     areaLight = mutils.createLocator("aiAreaLight", asLight=True)
@@ -11,8 +11,8 @@ def CreateAreaLight(name, intensity, color, scale, position, rotation):
     areaLight = cmds.rename(name)
 
     # Set attributes for the light
-    cmds.setAttr(areaLight + '.intensity', intensity)
-    cmds.setAttr(areaLight + '.color', color[0], color[1], color[2])
+    cmds.setAttr(areaLight + '.intensity', 3.0)
+    cmds.setAttr(areaLight + '.color', 1, 1, 1)
     cmds.setAttr(areaLight + '.normalize', False)
 
     # Set transform attributes
@@ -31,9 +31,9 @@ def CreateSkyDomeSetting():
     cmds.setAttr(skyLight + ".intensity", 0.2)
     cmds.setAttr(skyLight + ".aiNormalize", False)
     
-    warmLight = CreateAreaLight('warmLight', 4.0, (1, 1, 1), (9, 5, 9), (0, 15, 20), (-40, 0, 0))
-    coolLight = CreateAreaLight('coolLight', 4.0, (1, 1, 1), (4, 3, 4), (15, 15, 5), (-40, 90, 0))
-    midLight = CreateAreaLight('midLight', 4.0, (1, 1, 1), (7, 4, 9), (0, 10, 0), (-60, -90, 0))
+    warmLight = CreateAreaLight('warmLight', (10, 5, 10), (0, 15, 20), (-40, 0, 0))
+    coolLight = CreateAreaLight('coolLight', (5, 4, 5), (15, 15, 5), (-40, 90, 0))
+    midLight = CreateAreaLight('midLight', (7, 5, 5), (0, 10, 0), (-60, -90, 0))
     
     
 CreateSkyDomeSetting()
